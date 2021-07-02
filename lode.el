@@ -31,34 +31,47 @@
 (require 'meq)
 
 ;;;###autoload
-(defun lode* (parent tags key func hint &rest keychain)
+(defmacro lode* (parent key func hint &rest keychain)
     (let* ((last-step (= (-count 'keywordp keychain) 1))
-            (carkey (meq/keyword-to-symbol-name (pop keychain)))
+
+            (open-keychain (-partition-before-pred #'keywordp keychain))
+            (current-keychain (car open-keychain))
+
+            ;; (carkey (meq/keyword-to-symbol-name (pop keychain)))
+            (carkey (meq/keyword-to-symbol-name (car current-keychain)))
+
             (last-name (concat (when parent (concat parent "/")) carkey))
+
             (deino-name (concat "lodestar/" last-name))
+
+            (hs (> (length current-keychain) 1))
+            (head-list (when hs (cdr current-keychain)))
+            (default-settings '(:color blue))
+            (settings-list (if hs (let* ((fhh (caar head-list)))
+                            (if (or (keywordp fhh) (keymapp fhh))
+                                (pop head-list)
+                                default-settings)) default-settings))
+
             (deino-funk (intern (concat
                 "defdeino"
                 (when (fboundp (intern (concat deino-name "/body"))) "+"))))
-            (last-list (if last-step `(,key ,func ,hint) 
-                `(,(meq/keyword-to-symbol-name (car keychain))
-                    ,(eval `(lode* ,last-name nil ,key ',func ,hint ,@keychain))))))
+
+            (last-list (if last-step `(,carkey ,func ,hint)
+                `(,carkey ,func ,hint)
+                ;; `(,(meq/keyword-to-symbol-name (car keychain))
+                ;;     ,`(lode* ,last-name ,key ,func ,hint ,@keychain) :color blue)
+                )))
 
         ;; Adapted From: https://github.com/abo-abo/deino/issues/164#issuecomment-136650511
-        (eval `(,deino-funk
+        `(,deino-funk
             ,(intern deino-name)
-            (:color blue)
+            ,settings-list
+            ,@head-list
             ,last-list
-            ("`" nil "cancel")))
-
-        ;; TODO: Why is this causing lode* to fail?
-        ;; (when tags (eval `(alloy-def ,@tags)))
-
-        ))
+            ("`" nil "cancel"))))
 
 ;;;###autoload
-(defun lodestar (key func hint &rest keychain) (interactive) (apply #'lode* nil nil key func hint keychain))
-;;;###autoload
-(defun lodetags (tags key func hint &rest keychain) (interactive) (apply #'lode* nil tags key func hint keychain))
+(defmacro lodestar (key func hint &rest keychain) (interactive) `(lode* nil ,key ,func ,hint ,@keychain))
 
 ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
 ;;;###autoload
@@ -66,31 +79,12 @@
 "Use-package handler for :lodestar."
 (use-package-concat
     (use-package-process-keywords name rest state)
-    `(,@(mapcar (lambda (arglist)
-                arglist
-                `(lodestar ,@arglist))
-                arglists))))
+    `(,@(mapcar (lambda (arglist) arglist `(lodestar ,@arglist)) arglists))))
 
 ;;;###autoload
 (defalias 'use-package-autoloads/:lodestar #'use-package-autoloads/:ghook)
 ;;;###autoload
 (defalias 'use-package-normalize/:lodestar #'use-package-normalize/:ghook)
-
-;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
-;;;###autoload
-(defun use-package-handler/:lodetags (name _keyword arglists rest state)
-"Use-package handler for :lodetags."
-(use-package-concat
-    (use-package-process-keywords name rest state)
-    `(,@(mapcar (lambda (arglist)
-                arglist
-                `(lodetags ,@arglist))
-                arglists))))
-
-;;;###autoload
-(defalias 'use-package-autoloads/:lodetags #'use-package-autoloads/:ghook)
-;;;###autoload
-(defalias 'use-package-normalize/:lodetags #'use-package-normalize/:ghook)
 
 ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2554
 (setq use-package-keywords
@@ -99,11 +93,10 @@
     (cl-loop for item in use-package-keywords
                 if (eq item :bind-keymap*)
                 collect :bind-keymap* and
-                collect :lodestar and
-                collect :lodetags
+                collect :lodestar
                 else
                 ;; don't add duplicates
-                unless (memq item '(:lodestar :lodetags))
+                unless (memq item '(:lodestar))
                 collect item))
 
 (provide 'lode)
