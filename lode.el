@@ -49,10 +49,15 @@
             (:color blue)
             ,last-list
             ("`" nil "cancel")))
-        (when tags `(define-key ,@tags))))
+
+        ;; TODO: Why is this causing lode* to fail?
+        ;; (when tags (eval `(alloy-def ,@tags)))
+
+        ))
 
 ;;;###autoload
 (defun lodestar (key func hint &rest keychain) (interactive) (apply #'lode* nil nil key func hint keychain))
+;;;###autoload
 (defun lodetags (tags key func hint &rest keychain) (interactive) (apply #'lode* nil tags key func hint keychain))
 
 ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
