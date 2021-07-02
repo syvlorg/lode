@@ -63,7 +63,7 @@
             (:color blue)
             ,last-list
             ("`" nil "cancel")))
-        (when tags `(alloy-def ,@tags))))
+        (when tags `(define-key ,@tags))))
 
 ;;;###autoload
 (defun lodestar (key func hint &rest keychain) (interactive) (apply #'lode* nil nil key func hint keychain))
