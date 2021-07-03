@@ -85,6 +85,8 @@
 (defmacro lodestar (key func hint &rest keychain) (interactive) `(lode* nil nil ,key ,func ,hint ,@keychain))
 ;;;###autoload
 (defmacro lodemaps (alloy key func hint &rest keychain) (interactive) `(lode* nil ,alloy ,key ,func ,hint ,@keychain))
+;;;###autoload
+(defmacro lodemon (alloy key func hint &rest keychain) (interactive) `(lode* nil (:keymaps demon-run ,@alloy) ,key ,func ,hint ,@keychain))
 
 ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
 ;;;###autoload
@@ -112,6 +114,19 @@
 ;;;###autoload
 (defalias 'use-package-normalize/:lodemaps #'use-package-normalize/:ghook)
 
+;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
+;;;###autoload
+(defun use-package-handler/:lodemon (name _keyword arglists rest state)
+"Use-package handler for :lodemon."
+(use-package-concat
+    (use-package-process-keywords name rest state)
+    `(,@(mapcar (lambda (arglist) arglist `(lodemon ,@arglist)) arglists))))
+
+;;;###autoload
+(defalias 'use-package-autoloads/:lodemon #'use-package-autoloads/:ghook)
+;;;###autoload
+(defalias 'use-package-normalize/:lodemon #'use-package-normalize/:ghook)
+
 ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2554
 (setq use-package-keywords
     ;; should go in the same location as :bind
@@ -120,10 +135,11 @@
                 if (eq item :bind-keymap*)
                 collect :bind-keymap* and
                 collect :lodestar and
-                collect :lodemaps
+                collect :lodemaps and
+                collect :lodemon
                 else
                 ;; don't add duplicates
-                unless (memq item '(:lodestar :lodemaps))
+                unless (memq item '(:lodestar :lodemaps :lodemon))
                 collect item))
 
 (provide 'lode)
