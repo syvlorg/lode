@@ -29,49 +29,48 @@
 (require 'alloy)
 (require 'dash)
 (require 'meq)
+(require 'cl-lib)
 
 ;;;###autoload
-(defmacro lode* (parent key func hint &rest keychain)
-    (let* ((last-step (= (-count 'keywordp keychain) 1))
-
+(defmacro lode* (parent alloy key func hint &rest keychain)
+    (let* ((last-head (= (-count 'keywordp keychain) 1))
             (open-keychain (-partition-before-pred #'keywordp keychain))
             (current-keychain (car open-keychain))
-
-            ;; (carkey (meq/keyword-to-symbol-name (pop keychain)))
-            (carkey (meq/keyword-to-symbol-name (car current-keychain)))
-
-            (last-name (concat (when parent (concat parent "/")) carkey))
-
-            (deino-name (concat "lodestar/" last-name))
-
-            (hs (> (length current-keychain) 1))
-            (head-list (when hs (cdr current-keychain)))
-            (default-settings '(:color blue))
-            (settings-list (if hs (let* ((fhh (caar head-list)))
-                            (if (or (keywordp fhh) (keymapp fhh))
-                                (pop head-list)
-                                default-settings)) default-settings))
-
+            (next-keychain (unless last-head (cadr open-keychain)))
+            (current-name (concat
+                (when parent (concat parent "/"))
+                (meq/keyword-to-symbol-name (car current-keychain))))
+            (deino-name (concat "lodestar/" current-name))
             (deino-funk (intern (concat
                 "defdeino"
                 (when (fboundp (intern (concat deino-name "/body"))) "+"))))
+            (next-head (if last-head
+                `(,key ,func ,hint)
+                `(,(meq/keyword-to-symbol-name (car next-keychain))
+                    ,(eval `(lode* ,current-name nil ,key ,func ,hint ,@(-flatten-n 1 (cdr open-keychain))))
+                    ,@'(:color blue))))
+            (head-list (cdr current-keychain))
+            (default-settings nil)
+            (settings-list (let* ((fhh (caar head-list)))
+                            (if (or (keywordp fhh) (keymapp fhh))
+                                (pop head-list)
+                                default-settings))))
 
-            (last-list (if last-step `(,carkey ,func ,hint)
-                `(,carkey ,func ,hint)
-                ;; `(,(meq/keyword-to-symbol-name (car keychain))
-                ;;     ,`(lode* ,last-name ,key ,func ,hint ,@keychain) :color blue)
-                )))
+        (push next-head head-list)
+
+        (when alloy (eval `(alloy-def ,@alloy 'lodestar/a/body)))
 
         ;; Adapted From: https://github.com/abo-abo/deino/issues/164#issuecomment-136650511
         `(,deino-funk
             ,(intern deino-name)
             ,settings-list
             ,@head-list
-            ,last-list
             ("`" nil "cancel"))))
 
 ;;;###autoload
-(defmacro lodestar (key func hint &rest keychain) (interactive) `(lode* nil ,key ,func ,hint ,@keychain))
+(defmacro lodestar (key func hint &rest keychain) (interactive) `(lode* nil nil ,key ,func ,hint ,@keychain))
+;;;###autoload
+(defmacro lodemaps (alloy key func hint &rest keychain) (interactive) `(lode* nil ,alloy ,key ,func ,hint ,@keychain))
 
 ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
 ;;;###autoload
@@ -86,6 +85,19 @@
 ;;;###autoload
 (defalias 'use-package-normalize/:lodestar #'use-package-normalize/:ghook)
 
+;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
+;;;###autoload
+(defun use-package-handler/:lodemaps (name _keyword arglists rest state)
+"Use-package handler for :lodemaps."
+(use-package-concat
+    (use-package-process-keywords name rest state)
+    `(,@(mapcar (lambda (arglist) arglist `(lodemaps ,@arglist)) arglists))))
+
+;;;###autoload
+(defalias 'use-package-autoloads/:lodemaps #'use-package-autoloads/:ghook)
+;;;###autoload
+(defalias 'use-package-normalize/:lodemaps #'use-package-normalize/:ghook)
+
 ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2554
 (setq use-package-keywords
     ;; should go in the same location as :bind
@@ -93,10 +105,11 @@
     (cl-loop for item in use-package-keywords
                 if (eq item :bind-keymap*)
                 collect :bind-keymap* and
-                collect :lodestar
+                collect :lodestar and
+                collect :lodemaps
                 else
                 ;; don't add duplicates
-                unless (memq item '(:lodestar))
+                unless (memq item '(:lodestar :lodemaps))
                 collect item))
 
 (provide 'lode)
