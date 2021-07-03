@@ -32,7 +32,7 @@
 (require 'cl-lib)
 
 ;;;###autoload
-(defmacro lode* (parent alloy key func hint &rest keychain)
+(defmacro lode* (parent alloy key func &rest keychain)
     (let* ((last-head (= (-count 'keywordp keychain) 1))
             (open-keychain (-partition-before-pred #'keywordp keychain))
             (current-keychain (car open-keychain))
@@ -45,9 +45,12 @@
                 "defdeino"
                 (when (fboundp (intern (concat deino-name "/body"))) "+"))))
             (next-head (if last-head
-                `(,key ,func ,hint)
+                `(,(if (stringp key) key (symbol-name key)) ,func ,(symbol-name func))
                 `(,(meq/keyword-to-symbol-name (car next-keychain))
-                    ,(eval `(lode* ,current-name nil ,key ,func ,hint ,@(-flatten-n 1 (cdr open-keychain))))
+
+                    ;; Another lode* call
+                    ,(eval `(lode* ,current-name nil ,key ,func ,@(-flatten-n 1 (cdr open-keychain))))
+
                     ,@'(:color blue))))
             (head-list (cdr current-keychain))
             (default-settings nil)
@@ -68,11 +71,11 @@
             ("`" nil "cancel"))))
 
 ;;;###autoload
-(defmacro lodestar (key func hint &rest keychain) (interactive) `(lode* nil nil ,key ,func ,hint ,@keychain))
+(defmacro lodestar (key func &rest keychain) (interactive) `(lode* nil nil ,key ,func ,@keychain))
 ;;;###autoload
-(defmacro lodemaps (alloy key func hint &rest keychain) (interactive) `(lode* nil ,alloy ,key ,func ,hint ,@keychain))
+(defmacro lodemaps (alloy key func &rest keychain) (interactive) `(lode* nil ,alloy ,key ,func ,@keychain))
 ;;;###autoload
-(defmacro lodemon (alloy key func hint &rest keychain) (interactive) `(lode* nil (:keymaps demon-run ,@alloy) ,key ,func ,hint ,@keychain))
+(defmacro lodemon (alloy key func &rest keychain) (interactive) `(lode* nil (:keymaps demon-run ,@alloy) ,key ,func ,@keychain))
 
 ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
 ;;;###autoload
