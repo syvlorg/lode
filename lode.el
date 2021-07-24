@@ -32,7 +32,7 @@
 (require 'cl-lib)
 
 ;;;###autoload
-(defmacro lode* (parent alloy key func &rest keychain)
+(defmacro lode* (parent alloy ryo-key key func &rest keychain)
     (let* ((last-head (= (-count 'keywordp keychain) 1))
             (open-keychain (-partition-before-pred #'keywordp keychain))
             (current-keychain (car open-keychain))
@@ -41,15 +41,14 @@
                 (when parent (concat parent "/"))
                 (meq/keyword-to-symbol-name (car current-keychain))))
             (deino-name (concat "lodestar/" current-name))
-            (deino-funk (intern (concat
-                "defdeino"
-                (when (fboundp (intern (concat deino-name "/body"))) "+"))))
+            (deino-plus (fboundp (intern (concat deino-name "/body"))))
+            (deino-funk (intern (concat "defdeino" (when deino-plus "+"))))
             (next-head (if last-head
                 `(,(if (stringp key) key (symbol-name key)) ,func ,(symbol-name func))
                 `(,(meq/keyword-to-symbol-name (car next-keychain))
 
                     ;; Another lode* call
-                    ,(eval `(lode* ,current-name nil ,key ,func ,@(-flatten-n 1 (cdr open-keychain))))
+                    ,(eval `(lode* ,current-name nil nil ,key ,func ,@(-flatten-n 1 (cdr open-keychain))))
 
                     ,@'(:color blue))))
             (head-list (cdr current-keychain))
@@ -67,15 +66,25 @@
         `(,deino-funk
             ,(intern deino-name)
             ,settings-list
+            ,(when ryo-key (concat "; l " ryo-key))
             ,@head-list
             ("`" nil "cancel"))))
 
 ;;;###autoload
-(defmacro lodestar (key func &rest keychain) (interactive) `(lode* nil nil ,key ,func ,@keychain))
+(defmacro lodestar (key func &rest keychain) (interactive)
+    `(lode* nil nil ,(if (stringp key) key (symbol-name key)) ,key ,func ,@keychain))
 ;;;###autoload
-(defmacro lodemaps (alloy key func &rest keychain) (interactive) `(lode* nil ,alloy ,key ,func ,@keychain))
+(defmacro lodemaps (alloy key func &rest keychain) (interactive)
+    `(lode* nil ,alloy ,(if (stringp key) key (symbol-name key)) ,key ,func ,@keychain))
 ;;;###autoload
-(defmacro lodemon (alloy key func &rest keychain) (interactive) `(lode* nil (:keymaps demon-run ,@alloy) ,key ,func ,@keychain))
+(defmacro lodemon (alloy key func &rest keychain) (interactive)
+    `(lode*
+        nil
+        (:keymaps demon-run ,@alloy)
+        ,(if (stringp key) key (symbol-name key))
+        ,key
+        ,func
+        ,@keychain))
 
 ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
 ;;;###autoload
