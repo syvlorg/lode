@@ -32,25 +32,25 @@
 (require 'cl-lib)
 
 ;;;###autoload
-(defmacro lode* (parent alloy ryo-key key func &rest keychain)
+(defmacro lode* (parent alloy ryo-key key* func &rest keychain)
     (let* ((last-head (= (-count 'keywordp keychain) 1))
             (open-keychain (-partition-before-pred #'keywordp keychain))
             (current-keychain (car open-keychain))
             (next-keychain (unless last-head (cadr open-keychain)))
             (current-name (concat
-                (when parent (concat parent "/"))
-                (meq/keyword-to-symbol-name (car current-keychain))))
+                (if parent (concat parent "/") "")
+                (deino--replace-key (meq/keyword-to-symbol-name (car current-keychain)))))
             (deino-name (concat "lodestar/" current-name))
             (deino-plus (fboundp (intern (concat deino-name "/body"))))
-            (deino-funk (intern (concat "defdeino" (when deino-plus "+"))))
+            (key (if (stringp key*) key* (symbol-name key*)))
             (next-head (if last-head
-                `(,(if (stringp key) key (symbol-name key)) ,func ,(symbol-name func))
+                `(,key ,func ,(symbol-name func))
                 `(,(meq/keyword-to-symbol-name (car next-keychain))
 
                     ;; Another lode* call
                     ,(eval `(lode* ,current-name nil nil ,key ,func ,@(-flatten-n 1 (cdr open-keychain))))
 
-                    ,@'(:color blue))))
+                    :color blue)))
             (head-list (cdr current-keychain))
             (default-settings nil)
             (settings-list (let* ((fhh (caar head-list)))
@@ -63,25 +63,23 @@
         (when alloy (eval `(alloy-def ,@alloy 'lodestar/a/body)))
 
         ;; Adapted From: https://github.com/abo-abo/deino/issues/164#issuecomment-136650511
-        `(,deino-funk
+        `(,(intern (concat "defdeino" (when deino-plus "+")))
             ,(intern deino-name)
             ,settings-list
-            ,(when ryo-key (concat "; l " ryo-key))
-            ,@head-list
-            ("`" nil "cancel"))))
+            ,@(unless deino-plus '(nil ("`" nil "cancel")))
+            ,@head-list)))
 
 ;;;###autoload
-(defmacro lodestar (key func &rest keychain) (interactive)
-    `(lode* nil nil ,(if (stringp key) key (symbol-name key)) ,key ,func ,@keychain))
+(defmacro lodestar (key func &rest keychain)
+    `(lode* nil nil ,key ,func ,@keychain))
 ;;;###autoload
-(defmacro lodemaps (alloy key func &rest keychain) (interactive)
-    `(lode* nil ,alloy ,(if (stringp key) key (symbol-name key)) ,key ,func ,@keychain))
+(defmacro lodemaps (alloy key func &rest keychain)
+    `(lode* nil ,alloy ,key ,func ,@keychain))
 ;;;###autoload
-(defmacro lodemon (alloy key func &rest keychain) (interactive)
+(defmacro lodemon (alloy key func &rest keychain)
     `(lode*
         nil
         (:keymaps demon-run ,@alloy)
-        ,(if (stringp key) key (symbol-name key))
         ,key
         ,func
         ,@keychain))
