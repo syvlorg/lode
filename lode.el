@@ -66,7 +66,7 @@
         `(,(intern (concat "defdeino" (when deino-plus "+")))
             ,(intern deino-name)
             ,settings-list
-            ,@(if deino-plus (listp nil) '((:color blue) nil ("`" nil "cancel")))
+            ,@(if deino-plus (list nil) '((:color blue) nil ("`" nil "cancel")))
             ,@head-list)))
 
 ;;;###autoload
