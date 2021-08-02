@@ -48,7 +48,7 @@
                 (if parent (concat parent "/") "")
                 (deino--replace-key (meq/keyword-to-symbol-name (car current-keychain)))))
             (deino-name (concat "lodestar/" current-name))
-            (deino-plus (fboundp (intern (concat deino-name "/body"))))
+            (deino-plus (fboundp (meq/inconcat deino-name "/body")))
             (key (if (stringp key*) key* (symbol-name key*)))
             (next-head (if last-head
                 `(,key ,func ,(symbol-name func))
@@ -70,7 +70,7 @@
         (when alloy (eval `(alloy-def ,@alloy 'lodestar/a/body)))
 
         ;; Adapted From: https://github.com/abo-abo/deino/issues/164#issuecomment-136650511
-        `(,(intern (concat "defdeino" (when deino-plus "+")))
+        `(,(meq/inconcat "defdeino" (when deino-plus "+"))
             ,(intern deino-name)
             ,settings-list
             ,@(if deino-plus (list nil) '((:color blue) nil ("`" nil "cancel")))
