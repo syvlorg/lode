@@ -33,7 +33,8 @@
 
 ;;;###autoload
 (defmacro lode* (parent alloy ryo-key key* func &rest keychain)
-    (let* ((last-head (= (-count 'keywordp keychain) 1))
+    (let* ((first-call (not parent))
+            (last-head (= (-count 'keywordp keychain) 1))
             (open-keychain (-partition-before-pred #'keywordp keychain))
             (current-keychain (car open-keychain))
             (next-keychain (unless last-head (cadr open-keychain)))
@@ -52,7 +53,7 @@
 
                     :color blue)))
             (head-list (cdr current-keychain))
-            (default-settings nil)
+            (default-settings '(:color blue))
             (settings-list (let* ((fhh (caar head-list)))
                             (if (or (keywordp fhh) (keymapp fhh))
                                 (pop head-list)
@@ -60,26 +61,40 @@
 
         (push next-head head-list)
 
-        (when alloy (eval `(alloy-def ,@alloy 'lodestar/a/body)))
+        (when alloy
+            (let* ((alloyed-list (listp alloy)))
+                (eval `(,(meq/inconcat
+                        (if alloyed-list "alloy-define-key" "alloy-def"))
+                        ,@(if alloyed-list alloy (list alloy))
+                        'lodestar/a/body))))
 
         ;; Adapted From: https://github.com/abo-abo/deino/issues/164#issuecomment-136650511
         `(,(meq/inconcat "defdeino" (when deino-plus "+"))
             ,(intern deino-name)
             ,settings-list
-            ,@(if deino-plus (list nil) '((:color blue) nil ("`" nil "cancel")))
+            ,@(if deino-plus (list nil) '((if first-call ryo-key nil) ("`" nil "cancel")))
             ,@head-list)))
 
+;; NOTE: Repeated calls with the same keys in the keychain will add to the hydras / deinos
+;; lodestar "M-r a b" "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f
+;; lodestar '("M-r a b" (("c" #'f1) ("d" #'f2))) "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f
+
 ;;;###autoload
-(defmacro lodestar (key func &rest keychain)
-    `(lode* nil nil ,key ,func ,@keychain))
+(defmacro lodestar (ryo-key key func &rest keychain)
+    `(lode* nil nil ,ryo-key ,key ,func ,@keychain))
+
+;; lodestar (:keymaps 'global-map) "M-r a b" "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f
+;; lodestar global-map "M-r a b" "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f
+
 ;;;###autoload
-(defmacro lodemaps (alloy key func &rest keychain)
-    `(lode* nil ,alloy ,key ,func ,@keychain))
+(defmacro lodemaps (alloy ryo-key key func &rest keychain)
+    `(lode* nil ,alloy ,ryo-key ,key ,func ,@keychain))
 ;;;###autoload
-(defmacro lodemon (alloy key func &rest keychain)
+(defmacro lodemon (alloy ryo-key key func &rest keychain)
     `(lode*
         nil
         (:keymaps demon-run ,@alloy)
+        ,ryo-key
         ,key
         ,func
         ,@keychain))
