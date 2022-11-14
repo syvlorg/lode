@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-11-14 Mon 10:24 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Jeet Ray" />
+<link rel="stylesheet" type="text/css" href="https://combinatronics.io/sylvorg/settings/main/src/styles/primary/syvl.css" />
+<link rel="icon" href="https://combinatronics.io/sylvorg/settings/main/src/icons/favicons/shiny-zigzagoon-galar.ico" sizes="any" />
+<link rel="icon" href="https://combinatronics.io/sylvorg/settings/main/src/icons/favicons/shiny-zigzagoon-galar.svg" />
+<link rel="manifest" href="https://combinatronics.io/sylvorg/settings/main/manifest.json" />
+<link rel="stylesheet" type="text/css" href="https://combinatronics.io/sylvorg/settings/main/src/styles/highlight/paraiso-dark.min.css" />
+<script src="https://combinatronics.io/sylvorg/settings/main/src/scripts/highlight/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<div class="header">
+<h1>We Are Syvlorg.</h1>
+<a href="">About Me</a>
+<a href="">About This Website</a>
+<a href="">About Syvlorg</a>
+<a href="https://resume.syvl.org">Résumé</a>
+<a href="https://index.syvl.org">Index</a>
+</div>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="content">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org8679f7c">lode</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org8679f7c" class="outline-2">
+<h2 id="org8679f7c">lode</h2>
+<div class="outline-text-2" id="text-org8679f7c">
+<div class="org-src-container">
+<pre><code class="language-lisp match-braces rainbow-braces">;;; lode.el --- a simple package                     -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2021  Jeet Ray
+
+;; Author: Jeet Ray &lt;aiern@protonmail.com&gt;
+;; Keywords: lisp
+;; Version: 0.0.1
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+
+;;; Commentary:
+
+;; Put a description of the package here
+
+;;; Code:
+
+(require 'deino)
+(require 'alloy)
+(require 'dash)
+(require 'meq)
+(require 'cl-lib)
+
+;;;###autoload
+(defmacro lode* (parent alloy ryo-key key* func &amp;rest keychain)
+    (let* ((first-call (not parent))
+            (last-head (= (-count 'keywordp keychain) 1))
+            (open-keychain (-partition-before-pred #'keywordp keychain))
+            (current-keychain (car open-keychain))
+            (next-keychain (unless last-head (cadr open-keychain)))
+            (current-name (concat
+                (if parent (concat parent "/") "")
+                (deino--replace-key (meq/keyword-to-symbol-name (car current-keychain)))))
+            (deino-name (concat "lodestar/" current-name))
+            (deino-plus (fboundp (meq/inconcat deino-name "/body")))
+            (key (if (stringp key*) key* (symbol-name key*)))
+            (next-head (if last-head
+                `(,key ,func ,(symbol-name func))
+                `(,(meq/keyword-to-symbol-name (car next-keychain))
+
+                    ;; Another lode* call
+                    ,(eval `(lode* ,current-name nil nil ,key ,func ,@(-flatten-n 1 (cdr open-keychain))))
+
+                    :color blue)))
+            (head-list (cdr current-keychain))
+            (default-settings '(:color blue))
+            (settings-list (let* ((fhh (caar head-list)))
+                            (if (or (keywordp fhh) (keymapp fhh))
+                                (pop head-list)
+                                default-settings))))
+
+        (push next-head head-list)
+
+        (when alloy
+            (let* ((alloyed-list (listp alloy)))
+                (eval `(,(meq/inconcat
+                        (if alloyed-list "alloy-define-key" "alloy-def"))
+                        ,@(if alloyed-list alloy (list alloy))
+                        'lodestar/a/body))))
+
+        ;; Adapted From: https://github.com/abo-abo/deino/issues/164#issuecomment-136650511
+        `(,(meq/inconcat "defdeino" (when deino-plus "+"))
+            ,(intern deino-name)
+            ,settings-list
+            ,@(if deino-plus (list nil) '((if first-call ryo-key nil) ("`" nil "cancel")))
+            ,@head-list)))
+
+;; NOTE: Repeated calls with the same keys in the keychain will add to the hydras / deinos
+;; lodestar "M-r a b" "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f
+;; lodestar '("M-r a b" (("c" #'f1) ("d" #'f2))) "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f
+
+;;;###autoload
+(defmacro lodestar (ryo-key key func &amp;rest keychain)
+    `(lode* nil nil ,ryo-key ,key ,func ,@keychain))
+
+;; lodestar (:keymaps 'global-map) "M-r a b" "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f
+;; lodestar global-map "M-r a b" "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f
+
+;;;###autoload
+(defmacro lodemaps (alloy ryo-key key func &amp;rest keychain)
+    `(lode* nil ,alloy ,ryo-key ,key ,func ,@keychain))
+;;;###autoload
+(defmacro lodemon (alloy ryo-key key func &amp;rest keychain)
+    `(lode*
+        nil
+        (:keymaps demon-run ,@alloy)
+        ,ryo-key
+        ,key
+        ,func
+        ,@keychain))
+
+(with-eval-after-load 'use-package
+    ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
+    ;;;###autoload
+    (defun use-package-handler/:lodestar (name _keyword arglists rest state)
+    "Use-package handler for :lodestar."
+    (use-package-concat
+        (use-package-process-keywords name rest state)
+        `(,@(mapcar (lambda (arglist) arglist `(lodestar ,@arglist)) arglists))))
+
+    ;;;###autoload
+    (defalias 'use-package-autoloads/:lodestar #'use-package-autoloads/:ghook)
+    ;;;###autoload
+    (defalias 'use-package-normalize/:lodestar #'use-package-normalize/:ghook)
+
+    ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
+    ;;;###autoload
+    (defun use-package-handler/:lodemaps (name _keyword arglists rest state)
+    "Use-package handler for :lodemaps."
+    (use-package-concat
+        (use-package-process-keywords name rest state)
+        `(,@(mapcar (lambda (arglist) arglist `(lodemaps ,@arglist)) arglists))))
+
+    ;;;###autoload
+    (defalias 'use-package-autoloads/:lodemaps #'use-package-autoloads/:ghook)
+    ;;;###autoload
+    (defalias 'use-package-normalize/:lodemaps #'use-package-normalize/:ghook)
+
+    ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
+    ;;;###autoload
+    (defun use-package-handler/:lodemon (name _keyword arglists rest state)
+    "Use-package handler for :lodemon."
+    (use-package-concat
+        (use-package-process-keywords name rest state)
+        `(,@(mapcar (lambda (arglist) arglist `(lodemon ,@arglist)) arglists))))
+
+    ;;;###autoload
+    (defalias 'use-package-autoloads/:lodemon #'use-package-autoloads/:ghook)
+    ;;;###autoload
+    (defalias 'use-package-normalize/:lodemon #'use-package-normalize/:ghook)
+
+    ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2554
+    (setq use-package-keywords
+        ;; should go in the same location as :bind
+        ;; adding to end may not cause problems, but see issue #22
+        (cl-loop for item in use-package-keywords
+                    if (eq item :bind-keymap*)
+                    collect :bind-keymap* and
+                    collect :lodestar and
+                    collect :lodemaps and
+                    collect :lodemon
+                    else
+                    ;; don't add duplicates
+                    unless (memq item '(:lodestar :lodemaps :lodemon))
+                    collect item)))
+
+(provide 'lode)
+;;; lode.el ends here
+</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Jeet Ray</p>
+<p class="date">Created: 2022-11-14 Mon 10:24</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
