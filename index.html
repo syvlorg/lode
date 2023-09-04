@@ -3,18 +3,18 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-14 Mon 10:24 -->
+<!-- 2023-09-04 Mon 12:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&lrm;</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Jeet Ray" />
-<link rel="stylesheet" type="text/css" href="https://combinatronics.io/sylvorg/settings/main/src/styles/primary/syvl.css" />
-<link rel="icon" href="https://combinatronics.io/sylvorg/settings/main/src/icons/favicons/shiny-zigzagoon-galar.ico" sizes="any" />
-<link rel="icon" href="https://combinatronics.io/sylvorg/settings/main/src/icons/favicons/shiny-zigzagoon-galar.svg" />
-<link rel="manifest" href="https://combinatronics.io/sylvorg/settings/main/manifest.json" />
-<link rel="stylesheet" type="text/css" href="https://combinatronics.io/sylvorg/settings/main/src/styles/highlight/paraiso-dark.min.css" />
-<script src="https://combinatronics.io/sylvorg/settings/main/src/scripts/highlight/highlight.min.js"></script>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="https://combinatronics.io/sylvorg/bundle/main/src/styles/primary/syvl.css" />
+<link rel="icon" href="https://combinatronics.io/sylvorg/bundle/main/src/icons/favicons/shiny-zigzagoon-galar.ico" sizes="any" />
+<link rel="icon" href="https://combinatronics.io/sylvorg/bundle/main/src/icons/favicons/shiny-zigzagoon-galar.svg" />
+<link rel="manifest" href="https://combinatronics.io/sylvorg/bundle/main/manifest.json" />
+<link rel="stylesheet" type="text/css" href="https://combinatronics.io/sylvorg/bundle/main/src/styles/highlight/paraiso-dark.min.css" />
+<script src="https://combinatronics.io/sylvorg/bundle/main/src/scripts/highlight/highlight.min.js"></script>
 <script>hljs.highlightAll();</script>
 <div class="header">
 <h1>We Are Syvlorg.</h1>
@@ -24,202 +24,180 @@
 <a href="https://resume.syvl.org">Résumé</a>
 <a href="https://index.syvl.org">Index</a>
 </div>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
-<div id="content">
-<div id="table-of-contents">
+<div id="content" class="content">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org8679f7c">lode</a></li>
+<li><a href="#orgc883133">lode</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org8679f7c" class="outline-2">
-<h2 id="org8679f7c">lode</h2>
-<div class="outline-text-2" id="text-org8679f7c">
+<div id="outline-container-orgc883133" class="outline-2">
+<h2 id="orgc883133">lode</h2>
+<div class="outline-text-2" id="text-orgc883133">
 <div class="org-src-container">
-<pre><code class="language-lisp match-braces rainbow-braces">;;; lode.el --- a simple package                     -*- lexical-binding: t; -*-
+<pre><code class="language-lisp match-braces rainbow-braces"><span style="font-weight: bold; font-style: italic;">;;; </span><span style="font-weight: bold; font-style: italic;">lode.el --- a simple package                     -*- lexical-binding: t; -*-</span>
 
-;; Copyright (C) 2021  Jeet Ray
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Copyright (C) 2021  Jeet Ray</span>
 
-;; Author: Jeet Ray &lt;aiern@protonmail.com&gt;
-;; Keywords: lisp
-;; Version: 0.0.1
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Author: Jeet Ray <a href="mailto:aiern%40protonmail.com">&lt;aiern@protonmail.com&gt;</a></span>
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Keywords: lisp</span>
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Version: 0.0.1</span>
 
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">This program is free software; you can redistribute it and/or modify</span>
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">it under the terms of the GNU General Public License as published by</span>
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">the Free Software Foundation, either version 3 of the License, or</span>
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">(at your option) any later version.</span>
 
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">This program is distributed in the hope that it will be useful,</span>
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">GNU General Public License for more details.</span>
 
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">You should have received a copy of the GNU General Public License</span>
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">along with this program.  If not, see <a href="http://www.gnu.org/licenses/">&lt;http://www.gnu.org/licenses/&gt;</a>.</span>
 
-;;; Commentary:
+<span style="font-weight: bold; font-style: italic;">;;; </span><span style="font-weight: bold; font-style: italic;">Commentary:</span>
 
-;; Put a description of the package here
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Put a description of the package here</span>
 
-;;; Code:
+<span style="font-weight: bold; font-style: italic;">;;; </span><span style="font-weight: bold; font-style: italic;">Code:</span>
 
-(require 'deino)
-(require 'alloy)
-(require 'dash)
-(require 'meq)
-(require 'cl-lib)
+(<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">deino</span>)
+(<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">alloy</span>)
+(<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">dash</span>)
+(<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">meq</span>)
+(<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">cl-lib</span>)
 
-;;;###autoload
-(defmacro lode* (parent alloy ryo-key key* func &amp;rest keychain)
-    (let* ((first-call (not parent))
+<span style="font-weight: bold; font-style: italic;">;;;</span><span style="font-weight: bold; font-style: italic;">###</span><span style="font-weight: bold; font-style: italic;">autoload</span>
+(<span style="font-weight: bold;">defmacro</span> <span style="font-weight: bold;">lode*</span> (parent alloy ryo-key key* func <span style="font-weight: bold; text-decoration: underline;">&amp;rest</span> keychain)
+    (<span style="font-weight: bold;">let*</span> ((first-call (not parent))
             (last-head (= (-count 'keywordp keychain) 1))
             (open-keychain (-partition-before-pred #'keywordp keychain))
             (current-keychain (car open-keychain))
-            (next-keychain (unless last-head (cadr open-keychain)))
+            (next-keychain (<span style="font-weight: bold;">unless</span> last-head (cadr open-keychain)))
             (current-name (concat
-                (if parent (concat parent "/") "")
+                (<span style="font-weight: bold;">if</span> parent (concat parent <span style="font-style: italic;">"/"</span>) <span style="font-style: italic;">""</span>)
                 (deino--replace-key (meq/keyword-to-symbol-name (car current-keychain)))))
-            (deino-name (concat "lodestar/" current-name))
-            (deino-plus (fboundp (meq/inconcat deino-name "/body")))
-            (key (if (stringp key*) key* (symbol-name key*)))
-            (next-head (if last-head
+            (deino-name (concat <span style="font-style: italic;">"lodestar/"</span> current-name))
+            (deino-plus (fboundp (meq/inconcat deino-name <span style="font-style: italic;">"/body"</span>)))
+            (key (<span style="font-weight: bold;">if</span> (stringp key*) key* (symbol-name key*)))
+            (next-head (<span style="font-weight: bold;">if</span> last-head
                 `(,key ,func ,(symbol-name func))
                 `(,(meq/keyword-to-symbol-name (car next-keychain))
 
-                    ;; Another lode* call
+                    <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Another lode* call</span>
                     ,(eval `(lode* ,current-name nil nil ,key ,func ,@(-flatten-n 1 (cdr open-keychain))))
 
-                    :color blue)))
+                    <span style="font-weight: bold;">:color</span> blue)))
             (head-list (cdr current-keychain))
-            (default-settings '(:color blue))
-            (settings-list (let* ((fhh (caar head-list)))
-                            (if (or (keywordp fhh) (keymapp fhh))
-                                (pop head-list)
+            (default-settings '(<span style="font-weight: bold;">:color</span> blue))
+            (settings-list (<span style="font-weight: bold;">let*</span> ((fhh (caar head-list)))
+                            (<span style="font-weight: bold;">if</span> (<span style="font-weight: bold;">or</span> (keywordp fhh) (keymapp fhh))
+                                (<span style="font-weight: bold;">pop</span> head-list)
                                 default-settings))))
 
-        (push next-head head-list)
+        (<span style="font-weight: bold;">push</span> next-head head-list)
 
-        (when alloy
-            (let* ((alloyed-list (listp alloy)))
+        (<span style="font-weight: bold;">when</span> alloy
+            (<span style="font-weight: bold;">let*</span> ((alloyed-list (listp alloy)))
                 (eval `(,(meq/inconcat
-                        (if alloyed-list "alloy-define-key" "alloy-def"))
-                        ,@(if alloyed-list alloy (list alloy))
+                        (<span style="font-weight: bold;">if</span> alloyed-list <span style="font-style: italic;">"alloy-define-key"</span> <span style="font-style: italic;">"alloy-def"</span>))
+                        ,@(<span style="font-weight: bold;">if</span> alloyed-list alloy (list alloy))
                         'lodestar/a/body))))
 
-        ;; Adapted From: https://github.com/abo-abo/deino/issues/164#issuecomment-136650511
-        `(,(meq/inconcat "defdeino" (when deino-plus "+"))
+        <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Adapted From: https://github.com/abo-abo/deino/issues/164#issuecomment-136650511</span>
+        `(,(meq/inconcat <span style="font-style: italic;">"defdeino"</span> (<span style="font-weight: bold;">when</span> deino-plus <span style="font-style: italic;">"+"</span>))
             ,(intern deino-name)
             ,settings-list
-            ,@(if deino-plus (list nil) '((if first-call ryo-key nil) ("`" nil "cancel")))
+            ,@(<span style="font-weight: bold;">if</span> deino-plus (list nil) '((<span style="font-weight: bold;">if</span> first-call ryo-key nil) (<span style="font-style: italic;">"`"</span> nil <span style="font-style: italic;">"cancel"</span>)))
             ,@head-list)))
 
-;; NOTE: Repeated calls with the same keys in the keychain will add to the hydras / deinos
-;; lodestar "M-r a b" "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f
-;; lodestar '("M-r a b" (("c" #'f1) ("d" #'f2))) "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">NOTE: Repeated calls with the same keys in the keychain will add to the hydras / deinos</span>
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">lodestar "M-r a b" "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f</span>
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">lodestar '("M-r a b" (("c" #'f1) ("d" #'f2))) "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f</span>
 
-;;;###autoload
-(defmacro lodestar (ryo-key key func &amp;rest keychain)
+<span style="font-weight: bold; font-style: italic;">;;;</span><span style="font-weight: bold; font-style: italic;">###</span><span style="font-weight: bold; font-style: italic;">autoload</span>
+(<span style="font-weight: bold;">defmacro</span> <span style="font-weight: bold;">lodestar</span> (ryo-key key func <span style="font-weight: bold; text-decoration: underline;">&amp;rest</span> keychain)
     `(lode* nil nil ,ryo-key ,key ,func ,@keychain))
 
-;; lodestar (:keymaps 'global-map) "M-r a b" "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f
-;; lodestar global-map "M-r a b" "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">lodestar (:keymaps 'global-map) "M-r a b" "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f</span>
+<span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">lodestar global-map "M-r a b" "g" #'func :a :M-b (:color "red") ("`" nil "cancel") :S-c (:color "pink") :C-d ("`" nil "cancel") :e ("`" nil "cancel") :f</span>
 
-;;;###autoload
-(defmacro lodemaps (alloy ryo-key key func &amp;rest keychain)
+<span style="font-weight: bold; font-style: italic;">;;;</span><span style="font-weight: bold; font-style: italic;">###</span><span style="font-weight: bold; font-style: italic;">autoload</span>
+(<span style="font-weight: bold;">defmacro</span> <span style="font-weight: bold;">lodemaps</span> (alloy ryo-key key func <span style="font-weight: bold; text-decoration: underline;">&amp;rest</span> keychain)
     `(lode* nil ,alloy ,ryo-key ,key ,func ,@keychain))
-;;;###autoload
-(defmacro lodemon (alloy ryo-key key func &amp;rest keychain)
+<span style="font-weight: bold; font-style: italic;">;;;</span><span style="font-weight: bold; font-style: italic;">###</span><span style="font-weight: bold; font-style: italic;">autoload</span>
+(<span style="font-weight: bold;">defmacro</span> <span style="font-weight: bold;">lodemon</span> (alloy ryo-key key func <span style="font-weight: bold; text-decoration: underline;">&amp;rest</span> keychain)
     `(lode*
         nil
-        (:keymaps demon-run ,@alloy)
+        (<span style="font-weight: bold;">:keymaps</span> demon-run ,@alloy)
         ,ryo-key
         ,key
         ,func
         ,@keychain))
 
-(with-eval-after-load 'use-package
-    ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
-    ;;;###autoload
-    (defun use-package-handler/:lodestar (name _keyword arglists rest state)
-    "Use-package handler for :lodestar."
+(<span style="font-weight: bold;">with-eval-after-load</span> 'use-package
+    <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708</span>
+    <span style="font-weight: bold; font-style: italic;">;;;</span><span style="font-weight: bold; font-style: italic;">###autoload</span>
+    (<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">use-package-handler/:lodestar</span> (name _keyword arglists rest state)
+    <span style="font-style: italic;">"Use-package handler for :lodestar."</span>
     (use-package-concat
         (use-package-process-keywords name rest state)
-        `(,@(mapcar (lambda (arglist) arglist `(lodestar ,@arglist)) arglists))))
+        `(,@(mapcar (<span style="font-weight: bold;">lambda</span> (arglist) arglist `(lodestar ,@arglist)) arglists))))
 
-    ;;;###autoload
-    (defalias 'use-package-autoloads/:lodestar #'use-package-autoloads/:ghook)
-    ;;;###autoload
-    (defalias 'use-package-normalize/:lodestar #'use-package-normalize/:ghook)
+    <span style="font-weight: bold; font-style: italic;">;;;</span><span style="font-weight: bold; font-style: italic;">###autoload</span>
+    (<span style="font-weight: bold;">defalias</span> '<span style="font-weight: bold;">use-package-autoloads/:lodestar</span> #'use-package-autoloads/:ghook)
+    <span style="font-weight: bold; font-style: italic;">;;;</span><span style="font-weight: bold; font-style: italic;">###autoload</span>
+    (<span style="font-weight: bold;">defalias</span> '<span style="font-weight: bold;">use-package-normalize/:lodestar</span> #'use-package-normalize/:ghook)
 
-    ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
-    ;;;###autoload
-    (defun use-package-handler/:lodemaps (name _keyword arglists rest state)
-    "Use-package handler for :lodemaps."
+    <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708</span>
+    <span style="font-weight: bold; font-style: italic;">;;;</span><span style="font-weight: bold; font-style: italic;">###autoload</span>
+    (<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">use-package-handler/:lodemaps</span> (name _keyword arglists rest state)
+    <span style="font-style: italic;">"Use-package handler for :lodemaps."</span>
     (use-package-concat
         (use-package-process-keywords name rest state)
-        `(,@(mapcar (lambda (arglist) arglist `(lodemaps ,@arglist)) arglists))))
+        `(,@(mapcar (<span style="font-weight: bold;">lambda</span> (arglist) arglist `(lodemaps ,@arglist)) arglists))))
 
-    ;;;###autoload
-    (defalias 'use-package-autoloads/:lodemaps #'use-package-autoloads/:ghook)
-    ;;;###autoload
-    (defalias 'use-package-normalize/:lodemaps #'use-package-normalize/:ghook)
+    <span style="font-weight: bold; font-style: italic;">;;;</span><span style="font-weight: bold; font-style: italic;">###autoload</span>
+    (<span style="font-weight: bold;">defalias</span> '<span style="font-weight: bold;">use-package-autoloads/:lodemaps</span> #'use-package-autoloads/:ghook)
+    <span style="font-weight: bold; font-style: italic;">;;;</span><span style="font-weight: bold; font-style: italic;">###autoload</span>
+    (<span style="font-weight: bold;">defalias</span> '<span style="font-weight: bold;">use-package-normalize/:lodemaps</span> #'use-package-normalize/:ghook)
 
-    ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708
-    ;;;###autoload
-    (defun use-package-handler/:lodemon (name _keyword arglists rest state)
-    "Use-package handler for :lodemon."
+    <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2708</span>
+    <span style="font-weight: bold; font-style: italic;">;;;</span><span style="font-weight: bold; font-style: italic;">###autoload</span>
+    (<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">use-package-handler/:lodemon</span> (name _keyword arglists rest state)
+    <span style="font-style: italic;">"Use-package handler for :lodemon."</span>
     (use-package-concat
         (use-package-process-keywords name rest state)
-        `(,@(mapcar (lambda (arglist) arglist `(lodemon ,@arglist)) arglists))))
+        `(,@(mapcar (<span style="font-weight: bold;">lambda</span> (arglist) arglist `(lodemon ,@arglist)) arglists))))
 
-    ;;;###autoload
-    (defalias 'use-package-autoloads/:lodemon #'use-package-autoloads/:ghook)
-    ;;;###autoload
-    (defalias 'use-package-normalize/:lodemon #'use-package-normalize/:ghook)
+    <span style="font-weight: bold; font-style: italic;">;;;</span><span style="font-weight: bold; font-style: italic;">###autoload</span>
+    (<span style="font-weight: bold;">defalias</span> '<span style="font-weight: bold;">use-package-autoloads/:lodemon</span> #'use-package-autoloads/:ghook)
+    <span style="font-weight: bold; font-style: italic;">;;;</span><span style="font-weight: bold; font-style: italic;">###autoload</span>
+    (<span style="font-weight: bold;">defalias</span> '<span style="font-weight: bold;">use-package-normalize/:lodemon</span> #'use-package-normalize/:ghook)
 
-    ;; Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2554
-    (setq use-package-keywords
-        ;; should go in the same location as :bind
-        ;; adding to end may not cause problems, but see issue #22
-        (cl-loop for item in use-package-keywords
-                    if (eq item :bind-keymap*)
-                    collect :bind-keymap* and
-                    collect :lodestar and
-                    collect :lodemaps and
-                    collect :lodemon
+    <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Adapted From: https://github.com/noctuid/general.el/blob/master/general.el#L2554</span>
+    (<span style="font-weight: bold;">setq</span> use-package-keywords
+        <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">should go in the same location as :bind</span>
+        <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">adding to end may not cause problems, but see issue #22</span>
+        (<span style="font-weight: bold;">cl-loop</span> for item in use-package-keywords
+                    if (eq item <span style="font-weight: bold;">:bind-keymap*</span>)
+                    collect <span style="font-weight: bold;">:bind-keymap*</span> and
+                    collect <span style="font-weight: bold;">:lodestar</span> and
+                    collect <span style="font-weight: bold;">:lodemaps</span> and
+                    collect <span style="font-weight: bold;">:lodemon</span>
                     else
-                    ;; don't add duplicates
-                    unless (memq item '(:lodestar :lodemaps :lodemon))
+                    <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">don't add duplicates</span>
+                    unless (memq item '(<span style="font-weight: bold;">:lodestar</span> <span style="font-weight: bold;">:lodemaps</span> <span style="font-weight: bold;">:lodemon</span>))
                     collect item)))
 
-(provide 'lode)
-;;; lode.el ends here
+(<span style="font-weight: bold;">provide</span> '<span style="font-weight: bold; text-decoration: underline;">lode</span>)
+<span style="font-weight: bold; font-style: italic;">;;; </span><span style="font-weight: bold; font-style: italic;">lode.el ends here</span>
 </code></pre>
 </div>
 </div>
@@ -227,7 +205,7 @@
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Jeet Ray</p>
-<p class="date">Created: 2022-11-14 Mon 10:24</p>
+<p class="date">Created: 2023-09-04 Mon 12:27</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

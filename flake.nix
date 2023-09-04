@@ -1,53 +1,71 @@
 {
-    nixConfig = {
-        # Adapted From: https://github.com/divnix/digga/blob/main/examples/devos/flake.nix#L4
-        # extra-substituters = "https://cache.nixos.org/ https://nix-community.cachix.org/";
-        trusted-substituters = "https://cache.nixos.org/";
-        # extra-trusted-public-keys = "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=";
-        trusted-public-keys = "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=";
-        # keep-derivations = true;
-        # keep-outputs = true;
-        extra-experimental-features = "nix-command flakes";
-        # accept-flake-config = true;
-        # show-trace = true;
-        # fallback = true;
-        # auto-optimise-store = true;
-        # builders-use-substitutes = true;
-        # cores = 0;
-        # flake-registry = https://raw.githubusercontent.com/sylvorg/settings/main/flake-registry.json;
-        # allow-unsafe-native-code-during-evaluation = true;
-        # min-free = 262144000;
-        # max-free = 1073741824;
+  nixConfig = {
+    # Adapted From: https://github.com/divnix/digga/blob/main/examples/devos/flake.nix#L4
+    accept-flake-config = true;
+    auto-optimise-store = true;
+    builders-use-substitutes = true;
+    cores = 0;
+    extra-experimental-features =
+      "nix-command flakes impure-derivations recursive-nix";
+    fallback = true;
+    flake-registry =
+      "https://raw.githubusercontent.com/syvlorg/flake-registry/master/flake-registry.json";
+    keep-derivations = true;
+    keep-outputs = true;
+    max-free = 1073741824;
+    min-free = 262144000;
+    show-trace = true;
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "nickel.cachix.org-1:ABoCOGpTJbAum7U6c+04VbjvLxG9f0gJP5kYihRRdQs="
+      "sylvorg.cachix.org-1:xd1jb7cDkzX+D+Wqt6TemzkJH9u9esXEFu1yaR9p8H8="
+    ];
+    trusted-substituters = [
+      "https://cache.nixos.org/"
+      "https://nix-community.cachix.org"
+      "https://nickel.cachix.org"
+      "https://sylvorg.cachix.org"
+    ];
+    warn-dirty = false;
+  };
+  description =
+    "Create a nested hydra / deino and bind it to a keymap using general / alloy in one go!";
+  inputs = rec {
+    bundle = {
+      url = "git+https://github.com/sylvorg/bundle.git";
+      type = "git";
+      submodules = true;
     };
-    description = "Create a nested hydra / deino and bind it to a keymap using general / alloy in one go!";
-    inputs = rec {
-        settings.url = github:sylvorg/settings;
-        titan.follows = "settings/titan";
-        nixpkgs.follows = "settings/nixpkgs";
+    valiant.follows = "bundle/valiant";
+    nixpkgs.follows = "bundle/nixpkgs";
 
-        epkg-deino.url = github:syvlorg/deino;
-        epkg-alloy.url = github:syvlorg/alloy;
+    ePkg-deino.url =
+      "git+https://github.com/syvlorg/deino.git";
+    ePkg-alloy.url =
+      "git+https://github.com/syvlorg/alloy.git";
 
-        flake-utils.url = github:numtide/flake-utils;
-        flake-compat = {
-            url = "github:edolstra/flake-compat";
-            flake = false;
-        };
+    flake-utils.url = "github:numtide/flake-utils";
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
     };
-    outputs = inputs@{ self, flake-utils, settings, ... }: with builtins; with settings.lib; with flake-utils.lib; settings.mkOutputs {
-        inherit inputs;
-        type = "emacs-nox";
-        pname = "lode";
-        callPackage = { emacs, pname }: emacs.pkgs.trivialBuild rec {
-            inherit pname;
+  };
+  outputs = inputs@{ self, flake-utils, ... }:
+    with builtins;
+    with inputs.bundle.lib;
+    with flake-utils.lib;
+    inputs.bundle.mkOutputs.emacs {
+      inherit inputs self;
+      pname = "lode";
+      callPackage = { emacs }:
+        iron.mkEmacsPackage {
+          inherit self inputs emacs;
+          package = rec {
             src = ./.;
-            buildInputs = flatten [ emacs propagatedUserEnvPkgs ];
-            propagatedUserEnvPkgs = with emacs.pkgs; flatten [ alloy deino deino.propagatedUserEnvPkgs ];
-            meta = {
-              inherit (emacs.meta) platforms;
-              homepage = "https://github.com/syvlorg/${pname}";
-              description = "Create a nested hydra / deino and bind it to a keymap using general / alloy in one go!";
-            };
+            meta.description =
+              "Create a nested hydra / deino and bind it to a keymap using general / alloy in one go!";
+          };
         };
-    };
+    } { };
 }
