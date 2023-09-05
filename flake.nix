@@ -33,7 +33,7 @@
     "Create a nested hydra / deino and bind it to a keymap using general / alloy in one go!";
   inputs = rec {
     bundle = {
-      url = "git+https://github.com/sylvorg/bundle.git";
+      url = "https://github.com/sylvorg/bundle.git";
       type = "git";
       submodules = true;
     };
